@@ -20,9 +20,5 @@ public class TestBase {
         Configuration.pageLoadTimeout = 60000;
     }
 
-    protected void openPage(String url) {
-        open(url);
-        new PopupHandler().closeAllPopups();
-        executeJavaScript("window.sessionStorage.clear();");
-    }
+
 }
