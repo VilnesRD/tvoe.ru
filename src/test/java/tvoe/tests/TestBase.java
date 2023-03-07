@@ -1,28 +1,51 @@
 package tvoe.tests;
 
 import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.Selenide;
+import com.codeborne.selenide.logevents.SelenideLogger;
+import io.qameta.allure.selenide.AllureSelenide;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import tvoe.tests.helpers.PopupHandler;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.aeonbits.owner.ConfigFactory;
 
-import static com.codeborne.selenide.Selenide.*;
+import tvoe.tests.config.WebDriverProvider;
+import tvoe.tests.config.WebDriverConfig;
+import tvoe.tests.helpers.Attach;
+
+
 
 public class TestBase {
+
+    private static WebDriverConfig config;
+    private static WebDriverProvider configuration;
+
     @BeforeAll
-    static void setUpAll() {
-        Configuration.holdBrowserOpen = true;
-        Configuration.browser = "chrome";
+    static void setUp() {
+
+        config = ConfigFactory.create(WebDriverConfig.class, System.getProperties());
+        configuration = new WebDriverProvider();
+        configuration.webDriverConfig(config);
+
+        DesiredCapabilities capabilities = new DesiredCapabilities();
+        capabilities.setCapability("enableVNC", true);
+        capabilities.setCapability("enableVideo", true);
+        Configuration.browserCapabilities = capabilities;
     }
 
     @BeforeEach
-    void setUp() {
-        Configuration.baseUrl = "https://tvoe.ru/";
+    void addListener() {
+        SelenideLogger.addListener("AllureSelenide", new AllureSelenide());
         Configuration.pageLoadTimeout = 60000;
     }
 
-    protected void openPage(String url) {
-        open(url);
-        new PopupHandler().closeAllPopups();
-        executeJavaScript("window.sessionStorage.clear();");
+    @AfterEach
+    void addAttachments() {
+        Attach.screenshotAs("Last screenshot");
+        Attach.pageSource();
+        Attach.browserConsoleLogs();
+        Attach.addVideo();
+        Selenide.closeWebDriver();
     }
 }

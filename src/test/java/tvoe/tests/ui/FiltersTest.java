@@ -1,32 +1,33 @@
 package tvoe.tests.ui;
 
-import com.codeborne.selenide.Condition;
+import io.qameta.allure.Step;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
 import tvoe.tests.TestBase;
-import tvoe.tests.helpers.PopupHandler;
-
-import java.time.Duration;
+import tvoe.tests.ui.PageObjects.FiltersObject;
+import tvoe.tests.ui.PageObjects.MainPageObject;
 
 import static com.codeborne.selenide.Configuration.baseUrl;
-import static com.codeborne.selenide.Selenide.*;
-import static com.codeborne.selenide.WebDriverRunner.url;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static io.qameta.allure.Allure.step;
+
 
 public class FiltersTest extends TestBase {
 
     @Test
+    @DisplayName("Проверка работы фильтров на сайте")
+    @Step
     void testFilters() {
-        openPage(baseUrl+"catalog/mujchinam/odejda/");
-        $(".filters").shouldBe(Condition.visible).click();
-        $$(".price-range__value-block input").first().setValue("1000");
-        $$(".price-range__value-block input").last().setValue("2000");
-        $(By.xpath("//label[@for='chk-47-3']")).click();
-        $(By.xpath("//label[@for='chk-49-2231']")).click();
-        $(".filters__buttons-block").shouldBe(Condition.visible, Duration.ofSeconds(7));
-        $$("div.filters__footer button.filters__button--apply").first().shouldBe(Condition.visible,Duration.ofSeconds(5)).doubleClick();
-        new PopupHandler().closeAllPopups();
-        assertThat(url()).isEqualTo(baseUrl+"catalog/mujchinam/odejda/?price_from=1000&price_to=2000&size=3&size=2231");
+        step("Открываем главную страницу", () -> {new MainPageObject()
+                .openPage(baseUrl);});
+        step("Выбираем необходимые фильтры", () -> {new FiltersObject()
+                .clickToFilterButton()
+                .setMinAndMaxPrice("1000","2000")
+                .chooseItemSize()
+                .chooseItemColor()
+                .clickToSubmitButton();});
+        step("Проверяем что на странице отображаются товары только соответствующие поиску", () -> {
+            new FiltersObject().checkResults();});
+
     }
 }
 
