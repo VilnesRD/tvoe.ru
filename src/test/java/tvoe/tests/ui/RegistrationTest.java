@@ -2,6 +2,7 @@ package tvoe.tests.ui;
 
 
 import com.github.javafaker.Faker;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import tvoe.tests.TestBase;
@@ -11,6 +12,7 @@ import tvoe.tests.ui.PageObjects.RegistrationObject;
 import java.util.Locale;
 
 import static com.codeborne.selenide.Configuration.baseUrl;
+import static io.qameta.allure.Allure.step;
 
 
 public class RegistrationTest extends TestBase {
@@ -22,19 +24,26 @@ public class RegistrationTest extends TestBase {
 
 
     @Test
+    @DisplayName("Проверка регистрации")
     void successfulRegistration() {
-        new MainPageObject().openPage(baseUrl);
-        new RegistrationObject().clickToLoginButton()
-                .clickToRegistrationButtons()
-                .setName(name)
-                .setPhoneNumber(number)
-                .setEmailField(email)
-                .setBirthdayField()
-                .chooseGender()
-                .applyPersonalDataAgreement()
-                .clickRegistrationSubmitButton();
-        new RegistrationObject().checkResults();
-
+        step("Открываем главную страницу", () -> {
+            new MainPageObject()
+                    .openPage(baseUrl);
+        });
+        step("Вводин данные нового пользователя", () -> {
+            new RegistrationObject().clickToLoginButton()
+                    .clickToRegistrationButtons()
+                    .setName(name)
+                    .setPhoneNumber(number)
+                    .setEmailField(email)
+                    .setBirthdayField()
+                    .chooseGender()
+                    .applyPersonalDataAgreement()
+                    .clickRegistrationSubmitButton();
+        });
+        step("Проверяем что пользователя перенаправили на правильную страницу", () -> {
+            new RegistrationObject().checkResults();
+        });
     }
-
 }
+

@@ -12,7 +12,6 @@ public class MainPageObject {
         open(url);
         new PopupHandler().closeAllPopups();
         executeJavaScript("window.sessionStorage.clear();");
-
         return this;
     }
 
