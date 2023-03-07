@@ -19,7 +19,7 @@ public class RegistrationTest extends TestBase {
 
     Faker faker = new Faker(new Locale("ru"));
     String name = faker.name().firstName(),
-            number = faker.phoneNumber().cellPhone(),
+            number = faker.phoneNumber().cellPhone().replaceAll("8", ""),
             email = "test_test@test.ru";
 
 
