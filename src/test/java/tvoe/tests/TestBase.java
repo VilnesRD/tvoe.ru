@@ -37,7 +37,7 @@ public class TestBase {
     @BeforeEach
     void addListener() {
         SelenideLogger.addListener("AllureSelenide", new AllureSelenide());
-        Configuration.pageLoadTimeout = 60000;
+        Configuration.pageLoadTimeout = 120000;
     }
 
     @AfterEach
