@@ -5,9 +5,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import tvoe.tests.TestBase;
 import tvoe.tests.ui.PageObjects.FiltersObject;
-import tvoe.tests.ui.PageObjects.MainPageObject;
+import tvoe.tests.ui.PageObjects.PopupCloser;
 
 import static com.codeborne.selenide.Configuration.baseUrl;
+import static com.codeborne.selenide.Selenide.open;
 import static io.qameta.allure.Allure.step;
 
 
@@ -17,8 +18,9 @@ public class FiltersTest extends TestBase {
     @DisplayName("Проверка работы фильтров на сайте")
     @Step
     void testFilters() {
-        step("Открываем главную страницу", () -> {new MainPageObject()
-                .openPage(baseUrl);});
+        step("Открываем главную страницу", () -> {
+            open(baseUrl);
+            new PopupCloser().closePopup();});
         step("Выбираем необходимые фильтры", () -> {new FiltersObject()
                 .clickToFilterButton()
                 .setMinAndMaxPrice("1000","2000")

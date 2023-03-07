@@ -6,12 +6,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import tvoe.tests.TestBase;
-import tvoe.tests.ui.PageObjects.MainPageObject;
+import tvoe.tests.ui.PageObjects.PopupCloser;
 import tvoe.tests.ui.PageObjects.RegistrationObject;
 
 import java.util.Locale;
 
 import static com.codeborne.selenide.Configuration.baseUrl;
+import static com.codeborne.selenide.Selenide.open;
 import static io.qameta.allure.Allure.step;
 
 
@@ -19,7 +20,7 @@ public class RegistrationTest extends TestBase {
 
     Faker faker = new Faker(new Locale("ru"));
     String name = faker.name().firstName(),
-            number = faker.phoneNumber().cellPhone(),
+            number = faker.phoneNumber().cellPhone().replaceAll("8", ""),
             email = "test_test@test.ru";
 
 
@@ -27,8 +28,8 @@ public class RegistrationTest extends TestBase {
     @DisplayName("Проверка регистрации")
     void successfulRegistration() {
         step("Открываем главную страницу", () -> {
-            new MainPageObject()
-                    .openPage(baseUrl);
+            open(baseUrl);
+            new PopupCloser().closePopup();
         });
         step("Вводин данные нового пользователя", () -> {
             new RegistrationObject().clickToLoginButton()
