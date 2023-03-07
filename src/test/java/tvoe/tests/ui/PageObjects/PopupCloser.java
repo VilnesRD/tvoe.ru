@@ -6,10 +6,9 @@ import tvoe.tests.helpers.PopupHandler;
 import static com.codeborne.selenide.Selenide.*;
 
 
-public class MainPageObject {
+public class PopupCloser {
 
-    public MainPageObject openPage(String url) {
-        open(url);
+    public PopupCloser closePopup() {
         new PopupHandler().closeAllPopups();
         executeJavaScript("window.sessionStorage.clear();");
         return this;

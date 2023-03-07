@@ -5,7 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import tvoe.tests.TestBase;
-import tvoe.tests.ui.PageObjects.MainPageObject;
+import tvoe.tests.ui.PageObjects.PopupCloser;
 
 import static com.codeborne.selenide.Condition.text;
 
@@ -19,8 +19,9 @@ public class CatalogsTests extends TestBase {
     @DisplayName("Проверка содержания разделов в категориях")
     @Step
     void testWomanGeneralCatalog(String categoryName, String categoryTitle) {
-        step("Открываем главную страницу", () -> {new MainPageObject()
-                .openPage(baseUrl);});
+        step("Открываем главную страницу", () -> {
+            open(baseUrl);
+            new PopupCloser().closePopup();});
         step("Выбираем categoryName", () -> {
             $$("li.menu__item--open a").filterBy(text(categoryName)).first().click();});
         step("Проверяем что в выбранной категории есть categoryTitle", () -> {
